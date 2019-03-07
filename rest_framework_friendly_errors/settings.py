@@ -206,6 +206,7 @@ FRIENDLY_FIELD_ERRORS = {
         'null': 2027,
         'invalid_choice': 2083,
         'not_a_list': 2123,
+        'incorrect_type': 2161,
         'empty': 2093
     },
 
