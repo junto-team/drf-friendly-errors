@@ -84,92 +84,12 @@ class FriendlyErrorMessagesMixin(FieldMap):
         self.registered_errors[key] = error
         raise RestValidationError(key)
 
-    def get_field_kwargs(self, field, field_data):
-        kwargs = {
-            'data_type': type(field_data).__name__
-        }
+    def find_key(self, field, error, field_name):
+        if getattr(error, 'code', None):
+            return error.code
 
-        if isinstance(field, self.field_map['boolean']):
-            kwargs.update({'input': field_data})
-        elif isinstance(field, self.field_map['string']):
-            kwargs.update({
-                'max_length': getattr(field, 'max_length', None),
-                'min_length': getattr(field, 'min_length', None),
-                'value': field_data
-            })
-        elif isinstance(field, self.field_map['numeric']):
-            kwargs.update({
-                'min_value': field.min_value,
-                'max_value': field.max_value,
-                'decimal_places': getattr(field, 'decimal_places', None),
-                'max_decimal_places': getattr(field, 'decimal_places', None),
-                'max_digits': getattr(field, 'max_digits', None)
-            })
-
-            max_digits = kwargs['max_digits']
-            decimal_places = kwargs['decimal_places']
-            if max_digits is not None and decimal_places is not None:
-                whole_digits = max_digits - decimal_places
-                kwargs.update({'max_whole_digits': whole_digits})
-        elif isinstance(field, tuple(self.field_map['date'].keys())):
-            kwargs.update({
-                'format': self.field_map['date'][field]
-            })
-        elif isinstance(field, self.field_map['choice']):
-            kwargs.update({
-                'input': field_data,
-                'input_type': type(field_data).__name__
-            })
-        elif isinstance(field, self.field_map['file']):
-            kwargs.update({
-                'max_length': field.max_length,
-                'length': len(field.parent.data.get(field.source, ''))
-            })
-        elif isinstance(field, self.field_map['composite']):
-            kwargs.update({
-                'input_type': type(field_data).__name__,
-                'max_length': getattr(field, 'max_length', None),
-                'min_length': getattr(field, 'min_length', None)
-            })
-        elif isinstance(field, self.field_map['relation']):
-            kwargs.update({
-                'pk_value': field_data,
-                'data_type': type(field_data).__name__,
-                'input_type': type(field_data).__name__,
-                'slug_name': getattr(field, 'slug_field', None),
-                'value': field_data
-            })
-        else:
-            kwargs.update({'max_length': getattr(field, 'max_length', None)})
-        return kwargs
-
-    def does_not_exist_many_to_many_handler(self, field, message, kwargs):
-        unformatted = field.error_messages['does_not_exist']
-        new_kwargs = kwargs
-        for value in kwargs['value']:
-            new_kwargs['value'] = value
-            if unformatted.format(**new_kwargs) == message:
-                return True
-        return False
-
-    def find_key(self, field, message, field_name):
-        kwargs = self.get_field_kwargs(
-            field,
-            self.initial_data.get(field_name)
-        )
-        for key in field.error_messages:
-            if key == 'does_not_exist' and isinstance(kwargs.get('value'), list) \
-                    and self.does_not_exist_many_to_many_handler(
-                        field,
-                        message,
-                        kwargs
-                    ):
-                return key
-            unformatted = field.error_messages[key]
-            if unformatted.format(**kwargs) == message:
-                return key
         if getattr(field, 'child_relation', None):
-            return self.find_key(field=field.child_relation, message=message, field_name=field_name)
+            return self.find_key(field=field.child_relation, error=error, field_name=field_name)
 
     def _run_validator(self, validator, field, message):
         try:
