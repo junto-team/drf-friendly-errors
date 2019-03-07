@@ -228,17 +228,21 @@ FRIENDLY_FIELD_ERRORS = {
     },
 
     'DateTimeField': {
+        'required': 2009,
         'invalid': 2015,
         'date': 2181
     },
     'DateField': {
+        'required': 2009,
         'invalid': 2015,
         'datetime': 2191
     },
     'TimeField': {
+        'required': 2009,
         'invalid': 2015
     },
     'DurationField': {
+        'required': 2009,
         'invalid': 2015
     },
 }
