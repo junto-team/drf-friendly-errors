@@ -195,7 +195,7 @@ class FriendlyErrorMessagesMixin(FieldMap):
             # но для классов, наследующих это поле - нет
             # Поэтому здесь если не нашли ошибки для текущего класса, попробуем найти ошибки в классов-родителей
             for field_type in field_type_mro:
-                error_codes = settings.FRIENDLY_FIELD_ERRORS.get(field_type, {})
+                error_codes = settings.FRIENDLY_FIELD_ERRORS.get(field_type)
                 if error_codes:
                     return {
                         'code': error_codes.get(key),
@@ -255,6 +255,7 @@ class FriendlyErrorMessagesMixin(FieldMap):
         pretty = []
         for error_type in errors:
             if isinstance(errors[error_type], Mapping):
+                # Случай вложенных ошибок. Рекурсивно получаем вложенные ошибки
                 nested_errors = self.build_pretty_errors(errors[error_type])
                 pretty.append({
                     'field': error_type,
