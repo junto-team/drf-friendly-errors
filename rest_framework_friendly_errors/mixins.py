@@ -120,7 +120,8 @@ class FriendlyErrorMessagesMixin(FieldMap):
                     return {
                         'code': error_codes.get(key),
                         'field': field.field_name,
-                        'message': error
+                        'message': error,
+                        'errors': [],
                     }
 
         # Here we know that error was raised by a custom field validator
@@ -134,7 +135,8 @@ class FriendlyErrorMessagesMixin(FieldMap):
             return {
                 'code': code,
                 'field': field.field_name,
-                'message': error
+                'message': error,
+                'errors': [],
             }
         # Here we know that error was raised by custom validate method
         # in serializer
@@ -145,7 +147,8 @@ class FriendlyErrorMessagesMixin(FieldMap):
             return {
                 'code': code,
                 'field': field.field_name,
-                'message': error
+                'message': error,
+                'errors': [],
             }
 
     def get_field_error_entries(self, errors, field):
@@ -159,13 +162,15 @@ class FriendlyErrorMessagesMixin(FieldMap):
             return {
                 'code': settings.FRIENDLY_NON_FIELD_ERRORS.get('invalid'),
                 'field': None,
-                'message': error
+                'message': error,
+                'errors': [],
             }
         code = self.NON_FIELD_ERRORS.get(error.code) or settings.FRIENDLY_NON_FIELD_ERRORS.get(error.code)
         return {
             'code': code,
             'field': None,
-            'message': error
+            'message': error,
+            'errors': [],
         }
 
     def get_non_field_error_entries(self, errors):
