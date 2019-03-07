@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
-from django.core.exceptions import ValidationError as DjangoValidationError, ValidationError
+from django.core.exceptions import ValidationError as DjangoValidationError
+from rest_framework.exceptions import ValidationError
 from rest_framework.fields import get_error_detail
 from rest_framework.settings import api_settings
 
