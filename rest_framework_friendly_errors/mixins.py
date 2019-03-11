@@ -9,11 +9,10 @@ from rest_framework.relations import *
 from rest_framework.utils.serializer_helpers import ReturnDict
 
 from rest_framework_friendly_errors import settings
-from rest_framework_friendly_errors.field_map import FieldMap
 from rest_framework_friendly_errors.utils import as_serializer_error
 
 
-class FriendlyErrorMessagesMixin(FieldMap):
+class FriendlyErrorMessagesMixin:
     FIELD_VALIDATION_ERRORS = {}
     NON_FIELD_ERRORS = {}
 
