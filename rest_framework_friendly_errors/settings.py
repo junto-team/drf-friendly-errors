@@ -16,7 +16,9 @@ VALIDATION_FAILED_CODE = USER_SETTINGS.get('VALIDATION_FAILED_CODE', 1000)
 VALIDATION_FAILED_MESSAGE = USER_SETTINGS.get('VALIDATION_FAILED_MESSAGE', _('Validation Failed'))
 
 CATCH_ALL_EXCEPTIONS = USER_SETTINGS.get(
-    'CATCH_ALL_EXCEPTIONS', False)
+    'CATCH_ALL_EXCEPTIONS',
+    False
+)
 
 FRIENDLY_FIELD_ERRORS = {
     'BooleanField': {
@@ -29,6 +31,7 @@ FRIENDLY_FIELD_ERRORS = {
         'invalid': 2011,
         'null': 2021
     },
+
     'CharField': {
         'required': 2002,
         'null': 2022,
@@ -246,6 +249,13 @@ FRIENDLY_FIELD_ERRORS = {
         'required': 2009,
         'invalid': 2015
     },
+
+    # Н-р, field = SomeSerializer()
+    # Если не отправить в запросе field,
+    # то нужно найти код ошибки для данного поля типа Serializer
+    'Serializer': {
+        'required': 2010,
+    }
 }
 
 FRIENDLY_FIELD_ERRORS = update_field_settings(
