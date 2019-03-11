@@ -17,10 +17,6 @@ class FriendlyErrorMessagesMixin(FieldMap):
     FIELD_VALIDATION_ERRORS = {}
     NON_FIELD_ERRORS = {}
 
-    def __init__(self, *args, **kwargs):
-        self.registered_errors = {}
-        super(FriendlyErrorMessagesMixin, self).__init__(*args, **kwargs)
-
     @property
     def errors(self):
         ugly_errors = super(FriendlyErrorMessagesMixin, self).errors
@@ -45,45 +41,6 @@ class FriendlyErrorMessagesMixin(FieldMap):
             raise ValidationError(detail=as_serializer_error(exc))
         return value
 
-    def register_error(self, error_message, field_name=None, error_key=None, error_code=None):
-        # ToDo: мб убрать вообще, лень этим пользоваться
-        if field_name is None:
-            if error_code is None:
-                raise ValueError('For non field error you must provide an error code')
-            error = {
-                'code': error_code,
-                'message': error_message,
-                'field': None
-            }
-        else:
-            field_instance = self.fields.get(field_name)
-            if field_instance is None:
-                raise ValueError('Incorrect field name')
-
-            field_type = field_instance.__class__.__name__
-            if error_key is None and error_code is None:
-                raise ValueError('You have to provide either error key or error code')
-
-            if error_code is not None:
-                error_code = error_code
-            else:
-                try:
-                    error_code = settings.FRIENDLY_FIELD_ERRORS[field_type].get(error_key)
-                except KeyError:
-                    raise ValueError(f'Unknown field type: "{field_type}"')
-
-                if error_code is None:
-                    raise ValueError(f'Unknown error key: "{error_key}" for field type: "{field_type}"')
-
-            error = {
-                'code': error_code,
-                'field': field_name,
-                'message': error_message
-            }
-        key = f'{error_message}_{error_code}_{field_name}'
-        self.registered_errors[key] = error
-        raise RestValidationError(key)
-
     def find_key(self, field, error, field_name):
         if getattr(error, 'code', None):
             return error.code
@@ -104,9 +61,6 @@ class FriendlyErrorMessagesMixin(FieldMap):
                 return validator
 
     def get_field_error_entry(self, error, field):
-        if error in self.registered_errors:
-            return self.registered_errors[error]
-
         field_type_mro = [klass.__name__ for klass in type(field).__mro__]
         key = self.find_key(field, error, field.field_name)
 
@@ -155,9 +109,6 @@ class FriendlyErrorMessagesMixin(FieldMap):
         return [self.get_field_error_entry(error, field) for error in errors]
 
     def get_non_field_error_entry(self, error):
-        if error in self.registered_errors:
-            return self.registered_errors[error]
-
         if settings.INVALID_DATA_MESSAGE.format(data_type=type(self.initial_data).__name__) == error:
             return {
                 'code': settings.FRIENDLY_NON_FIELD_ERRORS.get('invalid'),
