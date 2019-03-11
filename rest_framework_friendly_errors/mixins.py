@@ -176,12 +176,14 @@ class FriendlyErrorMessagesMixin(FieldMap):
     def get_non_field_error_entries(self, errors):
         return [self.get_non_field_error_entry(error) for error in errors]
 
-    def build_pretty_errors(self, errors):
+    def build_pretty_errors(self, errors, fields=None):
         pretty = []
         for error_type in errors:
             if isinstance(errors[error_type], Mapping):
+                if hasattr(self.fields[error_type], 'fields'):
+                    fields = self.fields[error_type].fields
                 # Случай вложенных ошибок. Рекурсивно получаем вложенные ошибки
-                nested_errors = self.build_pretty_errors(errors[error_type])
+                nested_errors = self.build_pretty_errors(errors[error_type], fields=fields)
                 pretty.append({
                     'field': error_type,
                     'code': nested_errors['code'],
@@ -198,7 +200,7 @@ class FriendlyErrorMessagesMixin(FieldMap):
                     'errors': []
                 }
             else:
-                field = self.fields.get(error_type)
+                field = fields.get(error_type)
                 # Прокидываем ошибку напрямую в случае кастомной ошибки, вызванной разработчиком напрямую, н-р,
                 # raise ValidationError({'code': 228, 'message': 'kek'})
                 if not field:
