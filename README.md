@@ -66,7 +66,7 @@ This package is fork of [drf-friend-errors library](https://github.com/FutureMin
 
 **- Changed/added some code errors**
 
-**- Support for custom field errors**
+**- Added support for custom field errors**
 
 Now if you have custom field, say:
 
@@ -82,7 +82,7 @@ class PrimaryKeyRelatedNestedField(serializers.PrimaryKeyRelatedField):
 ```
 
 You don't have to specify custom errors for this field in settings,
-because, now friendly-errors would use error code of PrimaryKeyRelatedField (parent class)
+since now friendly-errors would use error codes of PrimaryKeyRelatedField (parent class)
 as default. 
 
 If no parent class errors found, friendly-errors would try to find error codes for parent class of parent class. 
@@ -95,9 +95,9 @@ class SoCustomField(PrimaryKeyRelatedNestedField):
     pass
 ```
 
-For class *SoCustomField* it would try to find error codes for PrimaryKeyRelatedNestedField, PrimaryKeyRelatedField
+For class *SoCustomField* it would try to find error codes of PrimaryKeyRelatedNestedField and then of PrimaryKeyRelatedField
 
-However, you always can specify your custom field error codes this way:
+However, you are always able to specify your custom field error codes:
 
 ```python
 FRIENDLY_ERRORS = {
@@ -108,9 +108,9 @@ FRIENDLY_ERRORS = {
 ```
   
 
-**- Changed custom validation errors throwing flow**
+**- Changed flow of raising custom validation errors**
 
-(look below)
+(look *custom serializer validation*)
 
 **- Added support for nested serializer and nested errors**
 
@@ -212,15 +212,15 @@ Usage
 Simply add special firendly error classes:
 
 ```python
-from rest_framework_friendly_errors.serializers import ModelSerializer, ListSerializer, Serializer
+from rest_framework_friendly_errors.serializers import FEModelSerializer, FEListSerializer, FESerializer
 
-class MyModelSerializer(ModelSerializer):
+class MyModelSerializer(FEModelSerializer):
     pass
 
-class MySerializer(Serializer):
+class MySerializer(FESerializer):
     pass
     
-class MyListSerializer(ListSerializer):
+class MyListSerializer(FEListSerializer):
     pass    
 ```
 
@@ -247,7 +247,7 @@ Custom serializer validation
 If you need custom field validation or validation for whole serializer you can do it this way:
 
 ```python
-class PostSerializer(ModelSerializer):
+class PostSerializer(FEModelSerializer):
     class Meta:
         model = Post
 
@@ -295,7 +295,7 @@ class PostSerializer(ModelSerializer):
 If you want to raise field error in validate method:
 
 ````python
-class PostSerializer(ModelSerializer):
+class PostSerializer(FEModelSerializer):
         class Meta:
             model = Post
 
