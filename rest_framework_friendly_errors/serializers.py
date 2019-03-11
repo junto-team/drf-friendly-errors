@@ -3,13 +3,13 @@ from rest_framework import serializers
 from rest_framework_friendly_errors.mixins import FriendlyErrorMessagesMixin
 
 
-class ModelSerializer(FriendlyErrorMessagesMixin, serializers.ModelSerializer):
+class FEModelSerializer(FriendlyErrorMessagesMixin, serializers.ModelSerializer):
     pass
 
 
-class ListSerializer(FriendlyErrorMessagesMixin, serializers.ListSerializer):
+class FEListSerializer(FriendlyErrorMessagesMixin, serializers.ListSerializer):
     pass
 
 
-class Serializer(FriendlyErrorMessagesMixin, serializers.Serializer):
+class FESerializer(FriendlyErrorMessagesMixin, serializers.Serializer):
     pass
