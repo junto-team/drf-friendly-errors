@@ -177,6 +177,9 @@ class FriendlyErrorMessagesMixin(FieldMap):
         return [self.get_non_field_error_entry(error) for error in errors]
 
     def build_pretty_errors(self, errors, fields=None):
+        if not fields:
+            fields = self.fields
+
         pretty = []
         for error_type in errors:
             if isinstance(errors[error_type], Mapping):
