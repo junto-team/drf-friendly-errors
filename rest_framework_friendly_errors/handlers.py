@@ -7,9 +7,6 @@ from rest_framework_friendly_errors.utils import is_pretty, get_int_value
 
 def get_transformed_value(value):
     if isinstance(value, list):
-        # Чтобы убрать собирание ошибок в список там, где не надо
-        if len(value) == 1:
-            return get_transformed_value(value[0])
         return [get_transformed_value(_value) for _value in value]
 
     if isinstance(value, dict):
