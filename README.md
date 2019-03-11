@@ -15,8 +15,8 @@ It turns default JSON body of HTTP 400 response, which look like this
 ```json
 {
     "name": ["This field is required."],
-    "password": ["This field may not be blank."]
-    "age": ["This field may not be null."]
+    "password": ["This field may not be blank."],
+    "age": ["This field may not be null."],
     "description": ["Ensure this field has no more than 100 characters."]
 }
 ```
@@ -117,7 +117,7 @@ FRIENDLY_ERRORS = {
 **- Got rid of `nested_errors: []`**
 
 It was:
-```json
+```
 {
     "code" : <int>,
     "message" :  <str>,
@@ -133,7 +133,7 @@ It was:
 ```
 
 Has become to:
-```json
+```
 {
     "code" : <int>,
     "message" :  <str>,
@@ -148,7 +148,7 @@ to more appropriate form
 **- Changed common error format (for nested field errors support)**
 
 It was:
-```json
+```
 {
     "code" : <int>,
     "message" :  <str>,
@@ -163,7 +163,7 @@ It was:
 ```
 
 Has become to:
-```json
+```
 {
         "code" : <int>,
         "message" :  <str>,
