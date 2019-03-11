@@ -3,6 +3,8 @@ DRF Friendly Errors (fork)
 
 **Extension for Django REST framework error display**
 
+Project with examples: https://github.com/junto-team/ToDo-List
+
 ## Overview
 
 This package extends default error JSON body providing configurable error codes
@@ -10,46 +12,49 @@ and more consumable response structure.
 
 It turns default JSON body of HTTP 400 response, which look like this
 
-
-    {
-        "name": ["This field is required."],
-        "password": ["This field may not be blank."]
-        "age": ["This field may not be null."]
-        "description": ["Ensure this field has no more than 100 characters."]
-    }
+```json
+{
+    "name": ["This field is required."],
+    "password": ["This field may not be blank."]
+    "age": ["This field may not be null."]
+    "description": ["Ensure this field has no more than 100 characters."]
+}
+```
 
 into
 
-    {
-        "code" : 1000,
-        "message" : "Validation Failed",
-        "errors" : [
-            {
-                "code" : 2002,
-                "field" : "name",
-                "message" : "This field is required.",
-                "errors": []
-            },
-            {
-                "code" : 2031,
-                "field" : "password",
-                "message" : "This field may not be blank.",
-                "errors": []
-            },
-            {
-                "code" : 2023,
-                "field" : "age",
-                "message" : "This field may not be null.",
-                "errors": []
-            },
-            {
-                "code" : 2041,
-                "field" : "description",
-                "message" : "Ensure this field has no more than 100 characters.",
-                "errors": []
-            },
-        ]
-    }
+```json
+{
+    "code" : 1000,
+    "message" : "Validation Failed",
+    "errors" : [
+        {
+            "code" : 2002,
+            "field" : "name",
+            "message" : "This field is required.",
+            "errors": []
+        },
+        {
+            "code" : 2031,
+            "field" : "password",
+            "message" : "This field may not be blank.",
+            "errors": []
+        },
+        {
+            "code" : 2023,
+            "field" : "age",
+            "message" : "This field may not be null.",
+            "errors": []
+        },
+        {
+            "code" : 2041,
+            "field" : "description",
+            "message" : "Ensure this field has no more than 100 characters.",
+            "errors": []
+        },
+    ]
+}
+```
 
 Library handles all `Django REST framework` built-in serializer validation
 
@@ -94,7 +99,7 @@ For class *SoCustomField* it would try to find error codes for PrimaryKeyRelated
 
 However, you always can specify your custom field error codes this way:
 
-```
+```python
 FRIENDLY_ERRORS = {
     FIELD_ERRORS = {
         'MyCustomFieldName': {'required': 10, 'null':11, 'blank': 12, 'max_length': 13, 'min_length': 14}
@@ -112,7 +117,7 @@ FRIENDLY_ERRORS = {
 **- Got rid of `nested_errors: []`**
 
 It was:
-```
+```json
 {
     "code" : <int>,
     "message" :  <str>,
@@ -128,7 +133,7 @@ It was:
 ```
 
 Has become to:
-```
+```json
 {
     "code" : <int>,
     "message" :  <str>,
@@ -143,7 +148,7 @@ to more appropriate form
 **- Changed common error format (for nested field errors support)**
 
 It was:
-```
+```json
 {
     "code" : <int>,
     "message" :  <str>,
@@ -158,7 +163,7 @@ It was:
 ```
 
 Has become to:
-```
+```json
 {
         "code" : <int>,
         "message" :  <str>,
